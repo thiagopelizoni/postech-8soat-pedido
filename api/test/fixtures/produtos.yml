@@ -1,0 +1,120 @@
+# test/fixtures/produtos.yml
+hamburguer:
+  nome: "Hamburguer"
+  descricao: "Hamburguer de carne com queijo"
+  preco: 15.0
+  categoria_id: 1
+
+sanduiche_natural:
+  nome: "Sanduíche Natural"
+  descricao: "Sanduíche de frango com alface"
+  preco: 12.0
+  categoria_id: 1
+
+cachorro_quente:
+  nome: "Cachorro Quente"
+  descricao: "Cachorro quente com molho especial"
+  preco: 10.0
+  categoria_id: 1
+
+taco:
+  nome: "Taco"
+  descricao: "Taco mexicano com carne moída"
+  preco: 18.0
+  categoria_id: 1
+
+wrap:
+  nome: "Wrap"
+  descricao: "Wrap de frango com legumes"
+  preco: 14.0
+  categoria_id: 1
+
+batata_frita:
+  nome: "Batata Frita"
+  descricao: "Batata frita crocante"
+  preco: 8.0
+  categoria_id: 2
+
+onion_rings:
+  nome: "Onion Rings"
+  descricao: "Anéis de cebola empanados"
+  preco: 9.0
+  categoria_id: 2
+
+salada_caesar:
+  nome: "Salada Caesar"
+  descricao: "Salada Caesar com frango"
+  preco: 12.0
+  categoria_id: 2
+
+mozzarella_sticks:
+  nome: "Mozzarella Sticks"
+  descricao: "Palitos de queijo empanados"
+  preco: 11.0
+  categoria_id: 2
+
+sopa_do_dia:
+  nome: "Sopa do Dia"
+  descricao: "Sopa do dia"
+  preco: 7.0
+  categoria_id: 2
+
+refrigerante:
+  nome: "Refrigerante"
+  descricao: "Refrigerante gelado"
+  preco: 5.0
+  categoria_id: 3
+
+suco_natural:
+  nome: "Suco Natural"
+  descricao: "Suco de laranja natural"
+  preco: 6.0
+  categoria_id: 3
+
+agua:
+  nome: "Água"
+  descricao: "Água mineral"
+  preco: 3.0
+  categoria_id: 3
+
+cerveja:
+  nome: "Cerveja"
+  descricao: "Cerveja artesanal"
+  preco: 10.0
+  categoria_id: 3
+
+cha_gelado:
+  nome: "Chá Gelado"
+  descricao: "Chá gelado de limão"
+  preco: 5.0
+  categoria_id: 3
+
+sorvete:
+  nome: "Sorvete"
+  descricao: "Sorvete de baunilha"
+  preco: 8.0
+  categoria_id: 4
+
+brownie:
+  nome: "Brownie"
+  descricao: "Brownie de chocolate com nozes"
+  preco: 9.0
+  categoria_id: 4
+
+cheesecake:
+  nome: "Cheesecake"
+  descricao: "Cheesecake com calda de frutas vermelhas"
+  preco: 10.0
+  categoria_id: 4
+
+pudim:
+  nome: "Pudim"
+  descricao: "Pudim de leite condensado"
+  preco: 7.0
+  categoria_id: 4
+
+torta_de_maca:
+  nome: "Torta de Maçã"
+  descricao: "Torta de maçã com canela"
+  preco: 11.0
+  categoria_id: 4

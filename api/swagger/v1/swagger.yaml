@@ -1,0 +1,1008 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/login":
+    post:
+      summary: Login do cliente
+      tags:
+      - Autenticação
+      parameters: []
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  nome:
+                    type: string
+                    example: Aristóteles
+                  email:
+                    type: string
+                    example: aristoteles@greek.com
+                  cpf:
+                    type: string
+                    example: '12345678901'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Credenciais inválidas.
+        '422':
+          description: Parâmetros ausentes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: CPF e senha são obrigatórios.
+        '502':
+          description: Erro no serviço de autenticação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Erro ao comunicar com o serviço de autenticação.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                  example: '12345678901'
+                senha:
+                  type: string
+                  example: "@TechChallenge!2024"
+              required:
+              - cpf
+              - senha
+  "/categorias":
+    get:
+      summary: Listar Categorias
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Categorias
+      responses:
+        '200':
+          description: categorias encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/categoria"
+    post:
+      summary: Criar Categoria
+      tags:
+      - Categorias
+      parameters: []
+      responses:
+        '201':
+          description: categoria criada
+        '422':
+          description: categoria não criada
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                descricao:
+                  type: string
+              required:
+              - nome
+  "/categorias/{id}":
+    get:
+      summary: Exibir uma Categoria
+      tags:
+      - Categorias
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: categoria encontrada
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/categoria"
+        '404':
+          description: categoria não encontrada
+    put:
+      summary: Atualizar uma Categoria
+      tags:
+      - Categorias
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: categoria atualizada
+        '404':
+          description: categoria não encontrada
+        '422':
+          description: categoria não atualizada
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                descricao:
+                  type: string
+              required:
+              - nome
+  "/clientes":
+    get:
+      summary: Listar Clientes
+      tags:
+      - Clientes
+      responses:
+        '200':
+          description: clientes encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/cliente"
+    post:
+      summary: Cria um cliente
+      tags:
+      - Clientes
+      parameters: []
+      responses:
+        '201':
+          description: cliente criado
+        '422':
+          description: parâmetros inválidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/cliente"
+  "/clientes/{id}":
+    get:
+      summary: Busca um Cliente pelo seu ID
+      tags:
+      - Clientes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: cliente encontrado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/cliente"
+        '404':
+          description: cliente não encontrado
+    put:
+      summary: Atualiza um cliente
+      tags:
+      - Clientes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: cliente atualizado
+        '422':
+          description: parâmetros inválidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/cliente"
+  "/clientes/nome/{nome}":
+    get:
+      summary: Busca clientes pelo Nome
+      tags:
+      - Clientes
+      parameters:
+      - name: nome
+        in: path
+        description: Nome do cliente
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Clientes encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/cliente"
+        '404':
+          description: Nenhum cliente encontrado
+  "/clientes/email/{email}":
+    get:
+      summary: Busca clientes por email
+      tags:
+      - Clientes
+      parameters:
+      - name: email
+        in: path
+        description: Email do cliente
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Clientes encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/cliente"
+        '404':
+          description: Nenhum cliente encontrado
+  "/clientes/cpf/{cpf}":
+    get:
+      summary: Busca um cliente pelo CPF
+      tags:
+      - Clientes
+      parameters:
+      - name: cpf
+        in: path
+        description: CPF do cliente
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Clientes encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/cliente"
+        '404':
+          description: Nenhum cliente encontrado
+  "/pedidos":
+    get:
+      summary: Listar Pedidos
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+    post:
+      summary: Criação de Pedido
+      tags:
+      - Pedidos
+      parameters: []
+      responses:
+        '201':
+          description: pedido criado
+        '422':
+          description: parâmetros inválidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cliente_id:
+                  type: integer
+                  nullable: true
+                produtos:
+                  type: array
+                  items:
+                    type: integer
+                observacao:
+                  type: string
+                  nullable: true
+                pagamento:
+                  type: string
+                  enum:
+                  - confirmado
+                  - em_aberto
+                status:
+                  type: string
+                  enum:
+                  - recebido
+                  - em_preparacao
+                  - pronto
+                  - finalizado
+              required:
+              - produtos
+  "/pedidos/{id}":
+    get:
+      summary: Exibir Pedido
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: pedido encontrado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/pedido"
+        '404':
+          description: pedido não encontrado
+    put:
+      summary: Atualização de Pedido
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: pedido atualizado
+        '422':
+          description: parâmetros inválidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cliente_id:
+                  type: integer
+                  nullable: true
+                produtos:
+                  type: array
+                  items:
+                    type: integer
+                observacao:
+                  type: string
+                  nullable: true
+                pagamento:
+                  type: string
+                  enum:
+                  - confirmado
+                  - em_aberto
+                status:
+                  type: string
+                  enum:
+                  - recebido
+                  - em_preparacao
+                  - pronto
+                  - finalizado
+              required:
+              - produtos
+  "/pedidos/pagamento-em-aberto":
+    get:
+      summary: GET Pedidos sem Pagamento confirmado
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/pagamento-confirmado":
+    parameters:
+    - name: page
+      in: query
+      description: Número da página
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      description: Número de itens por página
+      schema:
+        type: integer
+    get:
+      summary: GET Pedidos com Pagamentos Confirmados
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/pagamento-recusado":
+    parameters:
+    - name: page
+      in: query
+      description: Número da página
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      description: Número de itens por página
+      schema:
+        type: integer
+    get:
+      summary: GET Pedidos com Pagamento Recusado
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/{id}/pagar":
+    put:
+      summary: Atualiza o pagamento do pedido para "confirmado"
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: pagamento confirmado
+        '422':
+          description: parâmetros inválidos
+  "/pedidos/recebidos":
+    parameters:
+    - name: page
+      in: query
+      description: Número da página
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      description: Número de itens por página
+      schema:
+        type: integer
+    get:
+      summary: GET Pedidos Recebidos
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/{id}/receber":
+    put:
+      summary: Atualiza o status do pedido para "Recebido"
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: pedido recebido
+        '422':
+          description: parâmetros inválidos
+  "/pedidos/em-preparacao":
+    get:
+      summary: GET Pedidos em Preparação
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/{id}/preparar":
+    put:
+      summary: Atualiza o status do pedido para "Em Preparação"
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: pedido em preparação
+        '422':
+          description: parâmetros inválidos
+  "/pedidos/prontos":
+    get:
+      summary: GET Pedidos Prontos
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/{id}/pronto":
+    put:
+      summary: Atualiza o status do pedido para "Pronto"
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: pedido pronto
+        '422':
+          description: parâmetros inválidos
+  "/pedidos/finalizados":
+    get:
+      summary: GET Pedidos Finalizados
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Pedidos
+      responses:
+        '200':
+          description: pedidos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/pedido"
+  "/pedidos/{id}/finalizar":
+    put:
+      summary: Atualiza o status do pedido para "Finalizado"
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: pedido finalizado
+        '422':
+          description: parâmetros inválidos
+  "/pedidos/{id}/qr-code":
+    get:
+      summary: Obtém a URL para pagamento de um pedido junto ao Mercado Pago
+      tags:
+      - Pedidos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '422':
+          description: parâmetros inválidos
+  "/produtos":
+    get:
+      summary: Listar Produtos
+      parameters:
+      - name: page
+        in: query
+        description: Número da página
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Número de itens por página
+        schema:
+          type: integer
+      tags:
+      - Produtos
+      responses:
+        '200':
+          description: produtos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nome:
+                      type: string
+                    descricao:
+                      type: string
+                    preco:
+                      type: number
+                    categoria_id:
+                      type: integer
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+                  required:
+                  - id
+                  - nome
+                  - descricao
+                  - preco
+                  - categoria_id
+                  - created_at
+                  - updated_at
+    post:
+      summary: Criar Produto
+      tags:
+      - Produtos
+      parameters: []
+      responses:
+        '201':
+          description: produto criado
+        '422':
+          description: produto não criado
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                descricao:
+                  type: string
+                preco:
+                  type: number
+                categoria_id:
+                  type: integer
+              required:
+              - nome
+              - preco
+              - categoria_id
+  "/produtos/{id}":
+    get:
+      summary: Buscar um Produto pelo seu ID
+      tags:
+      - Produtos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: produto encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  descricao:
+                    type: string
+                  preco:
+                    type: number
+                  categoria_id:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - nome
+                - descricao
+                - preco
+                - categoria_id
+                - created_at
+                - updated_at
+        '404':
+          description: produto não encontrado
+    put:
+      summary: Atualizar Produto
+      tags:
+      - Produtos
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: produto atualizado
+        '404':
+          description: produto não encontrado
+        '422':
+          description: produto não atualizado
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                descricao:
+                  type: string
+                preco:
+                  type: number
+                categoria_id:
+                  type: integer
+              required:
+              - nome
+              - preco
+              - categoria_id
+  "/produtos/nome/{nome}":
+    get:
+      summary: Busca Produtos por nome
+      tags:
+      - Produtos
+      parameters:
+      - name: nome
+        in: path
+        description: Nome do produto
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Produtos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/produto"
+        '404':
+          description: Nenhum produto encontrado
+components:
+  schemas:
+    produto:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - nome
+      - descricao
+      - preco
+    categoria:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - nome
+      - descricao
+    cliente:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        data_nascimento:
+          type: string
+          format: date
+        cpf:
+          type: string
+        email:
+          type: string
+        senha:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - nome
+      - data_nascimento
+      - cpf
+      - email
+      - senha
+      - created_at
+      - updated_at
+    pedido:
+      type: object
+      properties:
+        id:
+          type: integer
+        valor:
+          type: number
+        status:
+          type: string
+          enum:
+          - recebido
+          - em_preparacao
+          - pronto
+          - finalizado
+        observacao:
+          type: string
+          nullable: true
+        data:
+          type: string
+          format: date-time
+        data_status:
+          type: string
+          format: date-time
+        pagamento:
+          type: string
+          enum:
+          - efetuado
+          - em_aberto
+        cliente:
+          "$ref": "#/components/schemas/cliente"
+        produtos:
+          type: array
+          items:
+            "$ref": "#/components/schemas/produto"
+      required:
+      - id
+      - valor
+      - status
+      - data
+      - data_status
+      - pagamento
+      - cliente
+      - produtos

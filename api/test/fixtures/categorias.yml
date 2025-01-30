@@ -1,0 +1,15 @@
+lanches:
+  id: 1
+  nome: "Lanches"
+
+acompanhamentos:
+  id: 2
+  nome: "Acompanhamentos"
+
+bebidas:
+  id: 3
+  nome: "Bebidas"
+
+sobremesas:
+  id: 4
+  nome: "Sobremesas"
