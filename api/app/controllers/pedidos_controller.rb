@@ -2,7 +2,7 @@ class PedidosController < ApplicationController
   before_action :set_pedido, only: %i[show update destroy pagar preparar receber pronto finalizar qr_code]
 
   def index
-    @pedidos = Pedido.order_by(updated_at: :desc).page(params[:page]).per(params[:per_page])
+    @pedidos = Pedido.order_by(updated_at: :desc)
     render json: @pedidos
   end
 
