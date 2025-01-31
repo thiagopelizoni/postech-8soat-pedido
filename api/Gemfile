@@ -25,3 +25,5 @@ gem 'kaminari'
 gem 'rswag'
 gem 'rswag-api'
 gem 'rswag-ui'
+
+gem 'mercadopago-sdk', '~> 2.2'

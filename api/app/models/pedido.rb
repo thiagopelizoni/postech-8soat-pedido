@@ -1,3 +1,5 @@
+require 'mercadopago'
+
 class Pedido
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -21,6 +23,36 @@ class Pedido
   before_save :calculate_valor
   before_update :validate_status_change
 
+  def integracao_mercado_pago
+    sdk = Mercadopago::SDK.new(ENV['MERCADO_PAGO_ACCESS_TOKEN'])
+
+    itens = produtos.map do |produto|
+      {
+        title: produto['nome'],
+        quantity: 1,
+        unit_price: produto['preco'].to_f
+      }
+    end
+  
+    preference_data = {
+      items: itens,
+      payer: {
+        name: cliente['nome'],
+        email: cliente['email']
+      },
+      external_reference: id.to_s,
+      notification_url: ENV['MERCADO_PAGO_WEBHOOK_URL'],
+      payment_methods: {
+        excluded_payment_types: [
+          { id: 'ticket' }
+        ]
+      }
+    }
+  
+    preference_response = sdk.preference.create(preference_data)
+    preference_response
+  end
+
   private
 
   def calculate_valor
@@ -43,4 +75,5 @@ class Pedido
       errors.add(:status, 'Status é obrigatório quando o Pagamento já tiver sido confirmado')
     end
   end
+
 end
