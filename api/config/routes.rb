@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
   
-  root "pedidos#index"
+  root to: redirect('/api-docs')
 
   resources :pedidos do
     collection do
@@ -26,4 +26,6 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  post 'webhooks/mercado-pago', to: 'webhooks#mercado_pago'
 end
