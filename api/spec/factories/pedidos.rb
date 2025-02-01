@@ -14,7 +14,7 @@ FactoryBot.define do
     produtos do
       Array.new(3) do
         {
-          id: Faker::Number.unique.between(from: 1, to: 100),
+          id: Faker::Number.unique.between(from: 1, to: 1000),
           slug: Faker::Food.dish.parameterize,
           nome: Faker::Food.dish,
           preco: Faker::Number.between(from: 5, to: 50)
