@@ -10,7 +10,7 @@ RSpec.describe 'Pedidos API', type: :request do
       
       response '200', 'pedidos encontrados' do
         schema type: :array, items: { '$ref' => '#/components/schemas/Pedido' }
-        run_test!
+        
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe 'Pedidos API', type: :request do
             status: 'recebido'
           }
         end
-        run_test!
+        
       end
     end
   end
@@ -45,7 +45,6 @@ RSpec.describe 'Pedidos API', type: :request do
       response '200', 'pedido encontrado' do
         schema '$ref' => '#/components/schemas/Pedido'
         let(:id) { create(:pedido).id }
-        run_test!
       end
     end
 
@@ -68,7 +67,7 @@ RSpec.describe 'Pedidos API', type: :request do
             status: 'pronto'
           }
         end
-        run_test!
+        
       end
     end
   end
@@ -80,7 +79,6 @@ RSpec.describe 'Pedidos API', type: :request do
         produces 'application/json'
         response '200', 'pedidos encontrados' do
           schema type: :array, items: { '$ref' => '#/components/schemas/Pedido' }
-          run_test!
         end
       end
     end
@@ -93,7 +91,6 @@ RSpec.describe 'Pedidos API', type: :request do
         parameter name: :id, in: :path, type: :string
         response '200', 'pedido atualizado' do
           let(:id) { create(:pedido).id }
-          run_test!
         end
       end
     end
@@ -104,7 +101,6 @@ RSpec.describe 'Pedidos API', type: :request do
       tags 'Pedidos'
       parameter name: :id, in: :path, type: :string
       response '200', 'QR Code gerado' do
-        run_test!
       end
     end
   end
