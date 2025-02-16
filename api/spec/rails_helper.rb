@@ -20,3 +20,11 @@ Shoulda::Matchers.configure do |config|
     with.library :active_model
   end
 end
+
+require 'simplecov'
+require 'simplecov-cobertura'
+SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/features/'
+end

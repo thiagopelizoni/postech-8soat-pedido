@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Tests inside Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "RAILS_ENV=${{ secrets.RAILS_ENV }}" >> .env
+          echo "RAILS_MAX_THREADS=${{ secrets.RAILS_MAX_THREADS }}" >> .env
+          echo "RAILS_PORT=${{ secrets.RAILS_PORT }}" >> .env
+          echo "MONGO_USERNAME=${{ secrets.MONGO_USERNAME }}" >> .env
+          echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env
+          echo "MONGO_PORT=${{ secrets.MONGO_PORT }}" >> .env
+          echo "MERCADO_PAGO_PUBLIC_KEY=${{ secrets.MERCADO_PAGO_PUBLIC_KEY }}" >> .env
+          echo "MERCADO_PAGO_ACCESS_TOKEN=${{ secrets.MERCADO_PAGO_ACCESS_TOKEN }}" >> .env
+          echo "MERCADO_PAGO_WEBHOOK_URL=${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}" >> .env
+          echo "MERCADO_PAGO_WEBHOOK_TOKEN=${{ secrets.MERCADO_PAGO_WEBHOOK_TOKEN }}" >> .env
+
+      - name: Ensure .env exists
+        run: ls -la .env && cat .env
+
+      - name: Set up Docker services
+        run: |
+          docker compose up -d db
+          sleep 10  # Aguarda inicialização do banco
+
+      - name: Run RSpec and Cucumber
+        run: docker compose up --abort-on-container-exit --exit-code-from test-runner test-runner
+
+      - name: Persist coverage data
+        run: |
+          # Captura o ID do container test-runner mesmo que ele esteja parado
+          container_id=$(docker ps -a -q -f "name=test-runner")
+          if [ -z "$container_id" ]; then
+            echo "Container test-runner not found."
+            exit 1
+          else
+            echo "Found container: $container_id"
+            docker cp $container_id:/api/coverage ./coverage
+          fi
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/coverage.xml
+
+  sonar:
+    name: Run SonarQube Analysis
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+
+      - name: Run SonarQube Scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: docker compose run --rm sonar
