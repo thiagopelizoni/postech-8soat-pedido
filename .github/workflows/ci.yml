@@ -30,6 +30,7 @@ jobs:
           echo "MERCADO_PAGO_ACCESS_TOKEN=${{ secrets.MERCADO_PAGO_ACCESS_TOKEN }}" >> .env
           echo "MERCADO_PAGO_WEBHOOK_URL=${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}" >> .env
           echo "MERCADO_PAGO_WEBHOOK_TOKEN=${{ secrets.MERCADO_PAGO_WEBHOOK_TOKEN }}" >> .env
+          echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> .env
 
       - name: Ensure .env exists
         run: ls -la .env && cat .env
@@ -64,18 +65,22 @@ jobs:
     name: Run SonarQube Analysis
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download coverage report
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage
-
-      - name: Run SonarQube Scanner
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: docker compose run --rm sonar
+      - name: Create minimal .env file for sonar
+        run: |
+          touch .env
+          echo "RAILS_ENV=${{ secrets.RAILS_ENV }}" >> .env
+          echo "RAILS_MAX_THREADS=${{ secrets.RAILS_MAX_THREADS }}" >> .env
+          echo "RAILS_PORT=${{ secrets.RAILS_PORT }}" >> .env
+          echo "MONGO_USERNAME=${{ secrets.MONGO_USERNAME }}" >> .env
+          echo "MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}" >> .env
+          echo "MONGO_PORT=${{ secrets.MONGO_PORT }}" >> .env
+          echo "MERCADO_PAGO_PUBLIC_KEY=${{ secrets.MERCADO_PAGO_PUBLIC_KEY }}" >> .env
+          echo "MERCADO_PAGO_ACCESS_TOKEN=${{ secrets.MERCADO_PAGO_ACCESS_TOKEN }}" >> .env
+          echo "MERCADO_PAGO_WEBHOOK_URL=${{ secrets.MERCADO_PAGO_WEBHOOK_URL }}" >> .env
+          echo "MERCADO_PAGO_WEBHOOK_TOKEN=${{ secrets.MERCADO_PAGO_WEBHOOK_TOKEN }}" >> .env
+          echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> .env
+    
